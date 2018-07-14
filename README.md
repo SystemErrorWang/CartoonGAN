@@ -6,18 +6,23 @@ In this implementation, we use celeba dataset for real person images and getchu 
 This code is based on Tensorflow 1.8, Python 3.6, and was tested in both windows10 and ubuntu16. You can run the code simply by typing "python main.py", and change the settings using argparse. The test function is still under construction, but I believe this code is easy to read, and it will not be difficult to implement it yourself.
 
 Here are results after 20000, 40000, 60000, 80000 and 100000 iterstions. The results are not very satisfying, and front hair is a serious problem. I will go ong trying to fine-tuning this model (and train with scenery dataset.)
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/19999.png?raw=true)
 
 Result after 20000 iterations
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/39999.png?raw=true)
 
 Result after 40000 iterations
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/59999.png?raw=true)
 
 Result after 60000 iterations
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/79999.png?raw=true)
 
 Result after 80000 iterations
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/99999.png?raw=true)
 
 Result after 100000 iterations
