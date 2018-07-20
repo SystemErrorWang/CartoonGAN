@@ -31,11 +31,7 @@ I also added some test results here:
 
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/53.png?raw=true)
 
-![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/54.png?raw=true)
-
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/58.png?raw=true)
-
-![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/65.png?raw=true)
 
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/74.png?raw=true)
 
