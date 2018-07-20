@@ -103,3 +103,45 @@ def vgg_loss(image_a, image_b):
     c = tf.cast(tf.shape(vgg_a.conv4_4)[3], tf.float32)
     VGG_loss = VGG_loss/(h*w*c)
     return VGG_loss
+
+
+def l2_norm(v, eps=1e-12):
+    return v / (tf.reduce_sum(v ** 2) ** 0.5 + eps)
+
+    
+#celeba = load_celeba('D:/celeba_dataset')
+def spectral_norm(w, iteration=1):
+    w_shape = w.shape.as_list()
+    w = tf.reshape(w, [-1, w_shape[-1]])
+
+    u = tf.get_variable("u", [1, w_shape[-1]], initializer=
+                        tf.truncated_normal_initializer(), trainable=False)
+
+    u_hat = u
+    v_hat = None
+    for i in range(iteration):
+        v_ = tf.matmul(u_hat, tf.transpose(w))
+        v_hat = l2_norm(v_)
+
+        u_ = tf.matmul(v_hat, w)
+        u_hat = l2_norm(u_)
+
+    sigma = tf.matmul(tf.matmul(v_hat, w), tf.transpose(u_hat))
+    w_norm = w / sigma
+
+    with tf.control_dependencies([u.assign(u_hat)]):
+        w_norm = tf.reshape(w_norm, w_shape)
+    
+    return w_norm
+
+
+
+def conv_sn(x, channels, k_size, stride=1, name='conv2d'):
+    with tf.variable_scope(name):
+        w = tf.get_variable("kernel", shape=[k_size, k_size, x.get_shape()[-1], channels],
+                            initializer=tf.contrib.layers.xavier_initializer())
+        b = tf.get_variable("bias", [channels], initializer=tf.constant_initializer(0.0))
+
+        output = tf.nn.conv2d(input=x, filter=spectral_norm(w), 
+                        strides=[1, stride, stride, 1], padding='SAME') + b
+        return output

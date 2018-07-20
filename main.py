@@ -5,14 +5,14 @@ import os
 import time
 import model
 import utils
-import vgg19  
+
 
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
 def arg_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_size", default = 96, type = int)
-    parser.add_argument("--crop_size", default = 28, type = int)
+    parser.add_argument("--crop_size", default = 16, type = int)
     parser.add_argument("--batch_size", default = 16, type = int)     
     parser.add_argument("--pre_train_iter", default = 20000, type = int)
     parser.add_argument("--iter", default = 100000, type = int)
@@ -60,25 +60,40 @@ class CartoonGAN():
         self.fake_cartoon = model.generator(self.photo_input, name='generator', 
                                             reuse=False, is_train=self.is_train)
 
-        self.real_logit_cartoon = model.patch_discriminator(self.cartoon_input, self.crop_size, 
+        self.real_logit_cartoon = model.multi_patch_discriminator(self.cartoon_input, self.crop_size, 
                                                             name='discriminator', reuse=False)    
         
-        self.fake_logit_cartoon = model.patch_discriminator(self.fake_cartoon, self.crop_size, 
+        self.fake_logit_cartoon = model.multi_patch_discriminator(self.fake_cartoon, self.crop_size, 
                                                             name='discriminator', reuse=True)
         
-        self.logit_blur = model.patch_discriminator(self.blur_input, self.crop_size, 
+        self.logit_blur = model.multi_patch_discriminator(self.blur_input, self.crop_size, 
                                                             name='discriminator', reuse=True)
 
         VGG_loss = utils.vgg_loss(self.photo_input, self.fake_cartoon)
         
-        '''
-        in the original paper, the weight for vgg loss is 10, but here I set it to 2e3
-        as the realization of vgg loss may be different and 10 is too small for this code
-        '''
-        g_loss = -tf.reduce_mean(tf.log(tf.nn.sigmoid(self.fake_logit_cartoon))) + 2e3*VGG_loss
+        g_loss = -tf.reduce_mean(tf.log(tf.nn.sigmoid(self.fake_logit_cartoon))) + 5e3*VGG_loss
+        
         d_loss = -tf.reduce_mean(tf.log(tf.nn.sigmoid(self.real_logit_cartoon))
                                 + tf.log(1. - tf.nn.sigmoid(self.fake_logit_cartoon))
                                 + tf.log(1. - tf.nn.sigmoid(self.logit_blur)))
+  
+        '''
+        g_loss = -tf.reduce_mean(self.fake_logit_cartoon) + 10*VGG_loss
+
+        d_loss = tf.reduce_mean(self.fake_logit_cartoon) - tf.reduce_mean(self.real_logit_cartoon)
+        
+        # Wasserstein loss with gradient penalty
+        differences = self.fake_cartoon - self.cartoon_input
+        alpha = tf.random_uniform(shape=[self.batch_size, self.image_size,
+                                           self.image_size, 3], minval=0., maxval=1.)
+        interpolates = self.cartoon_input + (alpha * differences)
+        D_inter = model.patch_discriminator(interpolates, self.crop_size, 
+                                      name='discriminator', reuse=True)
+        gradients = tf.gradients(D_inter, [interpolates])[0]
+        slopes = tf.sqrt(tf.reduce_sum(tf.square(gradients), reduction_indices=[1]))
+        gradient_penalty = tf.reduce_mean((slopes - 1.) ** 2)
+        d_loss += self.lambda_ * gradient_penalty
+        '''
 
         all_vars = tf.trainable_variables()
 
@@ -125,23 +140,34 @@ class CartoonGAN():
             start_time = time.time()
             
             # Pre-training iterations
-            for iter in range(self.pre_train_iter):
-                photo_batch = utils.next_batch(self.batch_size, self.image_size, self.celeba_list)
-                _ = sess.run([self.init_optim], feed_dict={self.photo_input: photo_batch, self.is_train: True})
+            if os.path.isfile(self.save_dir+ '/pre_train-{}.meta'.format(self.pre_train_iter-1)):
+                self.saver.restore(sess, self.save_dir+ '/pre_train-'+str(self.pre_train_iter-1))
+                print('Finished loading pre_trained model')
+            else:
+                for iter in range(self.pre_train_iter):
+                    photo_batch = utils.next_batch(self.batch_size, self.image_size, self.celeba_list)
+                    cartoon_batch, blur_batch = utils.next_blur_batch(self.batch_size, 
+                                                                  self.image_size, 
+                                                                  self.cartoon_list)
+                
+                    _ = sess.run([self.init_optim], feed_dict={self.photo_input: photo_batch, 
+                                                                self.cartoon_input: cartoon_batch, 
+                                                                self.blur_input: blur_batch, 
+                                                                self.is_train: True})
+    
+                    if np.mod(iter+1, 50) == 0:
+                        print('pre_train iteration:[%d/%d], time cost:%f' \
+                                %(iter+1, self.pre_train_iter, time.time()-start_time))
+                        start_time = time.time()
 
-                if np.mod(iter+1, 50) == 0:
-                    print('pre_train iteration:[%d/%d], time cost:%f' \
-                            %(iter+1, self.pre_train_iter, time.time()-start_time))
-                    start_time = time.time()
-
-                    if np.mod(iter+1, 1000) == 0:
-                        batch_image = sess.run([self.fake_cartoon], 
+                        if np.mod(iter+1, 1000) == 0:
+                            batch_image = sess.run([self.fake_cartoon], 
                                          feed_dict={self.photo_input: photo_batch, self.is_train: True})
-                        batch_image = np.squeeze(batch_image)
-                        utils.print_fused_image(batch_image, self.train_out_dir, str(iter)+'_pre_train.png', 4)
+                            batch_image = np.squeeze(batch_image)
+                            utils.print_fused_image(batch_image, self.train_out_dir, str(iter)+'_pre_train.png', 4)
                         
-                    if np.mod(iter+1, self.pre_train_iter) == 0:
-                        self.saver.save(sess, self.save_dir+ '/pre_train', global_step=iter)
+                        if np.mod(iter+1, self.pre_train_iter) == 0:
+                            self.saver.save(sess, self.save_dir+ '/pre_train', global_step=iter)
                         
             #Training iterations
             for iter in range(self.iter):                
@@ -184,9 +210,19 @@ class CartoonGAN():
         
         if not os.path.exists(self.test_out_dir):
             os.mkdir(self.test_out_dir)
-        self.saver.restore(self.sess, tf.train.latest_checkpoint(self.save_dir)) 
-        pass
         
+        self.test_list = utils.get_filename_list('actress')
+        
+        init = ([tf.global_variables_initializer(), tf.local_variables_initializer()])
+        self.sess.run(init)
+        self.saver.restore(self.sess, tf.train.latest_checkpoint(self.save_dir)) 
+
+        for idx in range(100):
+            photo_batch = utils.next_batch(self.batch_size, self.image_size, self.test_list)
+            images = self.sess.run([self.fake_cartoon], feed_dict={self.photo_input: photo_batch, 
+                                                                    self.is_train: True})
+            images = np.squeeze(images)
+            utils.print_fused_image(images, self.test_out_dir, str(idx)+'.png', 4 )
 
 
 

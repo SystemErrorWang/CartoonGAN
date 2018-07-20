@@ -53,81 +53,110 @@ def generator(input_tensor, name='generator', reuse=False, is_train=False):
         return conv_out
 
 
-def discriminator(input_tensor, patch_size, name='discriminator', reuse=False, is_train=False):
+def multi_patch_discriminator(input_tensor, patch_size, 
+                                name='discriminator', reuse=False, use_bn=True):
     #input size 36*36 
     with tf.variable_scope(name, reuse=reuse):
-            
-        conv1 = slim.conv2d(input_tensor, 32, [3, 3], activation_fn=None)
-        norm1 = tf.contrib.layers.layer_norm(conv1)
+        patach_conv_layers = []
+        for i in range(4):
+            batch_size = tf.shape(input_tensor)[0]
+            patch = tf.random_crop(input_tensor, [batch_size, patch_size, patch_size, 3])
+            patch_conv = utils.conv_sn(patch, 32, 3, name='patch_conv'+str(i))
+            if use_bn:
+                norm_p = batch_norm(patch_conv, training=True)
+            else:
+                norm_p = tf.contrib.layers.layer_norm(patch_conv)
+            relu_p = utils.leaky_relu(norm_p)
+            patach_conv_layers.append(relu_p)
+
+        patch_concat = tf.concat(patach_conv_layers, axis=-1)
+
+        conv1 = utils.conv_sn(patch_concat, 128, 3, stride=2, name='conv1')
+        if use_bn:
+            norm1 = batch_norm(conv1, training=True)
+        else:
+            norm1 = tf.contrib.layers.layer_norm(conv1)
         relu1 = utils.leaky_relu(norm1)
         
-        conv2 = slim.conv2d(relu1, 32, [3, 3], stride=2, activation_fn=None)
-        norm2 = tf.contrib.layers.layer_norm(conv2)
+        conv2 = utils.conv_sn(relu1, 256, 3, name='conv2')
+        if use_bn:
+            norm2 = batch_norm(conv2, training=True)
+        else:
+            norm2 = tf.contrib.layers.layer_norm(conv2)
         relu2 = utils.leaky_relu(norm2)
         
-        conv3 = slim.conv2d(relu2, 64, [3, 3], activation_fn=None)
-        norm3 = tf.contrib.layers.layer_norm(conv3)
+        conv3 = utils.conv_sn(relu2, 256, 3, stride=2, name='conv3')
+        if use_bn:
+            norm3 = batch_norm(conv3, training=True)
+        else:
+            norm3 = tf.contrib.layers.layer_norm(conv3)
         relu3 = utils.leaky_relu(norm3)
         
-        conv4 = slim.conv2d(relu3, 64, [3, 3], stride=2, activation_fn=None)
-        norm4 = tf.contrib.layers.layer_norm(conv4)
+        conv4 = utils.conv_sn(relu3, 512, 3,name='conv4')
+        if use_bn:
+            norm4 = batch_norm(conv4, training=True)
+        else:
+            norm4 = tf.contrib.layers.layer_norm(conv4)
         relu4 = utils.leaky_relu(norm4)
-      
-        conv5 = slim.conv2d(relu4, 128, [3, 3], activation_fn=None)
-        norm5 = tf.contrib.layers.layer_norm(conv5)
-        relu5 = utils.leaky_relu(norm5)
         
-        conv6 = slim.conv2d(relu5, 128, [3, 3], stride=2, activation_fn=None)
-        norm6 = tf.contrib.layers.layer_norm(conv6)
-        relu6 = utils.leaky_relu(norm6)
-
-        conv7 = slim.conv2d(relu6, 256, [3, 3], stride=2, activation_fn=None)
-        norm7 = tf.contrib.layers.layer_norm(conv7)
-        relu7 = utils.leaky_relu(norm7)
-
-        conv8 = slim.conv2d(relu7, 256, [3, 3], stride=2, activation_fn=None)
-        norm8 = tf.contrib.layers.layer_norm(conv8)
-        relu8 = utils.leaky_relu(norm8)
-        
-        conv_out = slim.conv2d(relu8, 1, [1, 1], activation_fn=None)
+        conv_out = utils.conv_sn(relu4, 1, 1, name='conv7')
         avg_pool = tf.reduce_mean(conv_out, axis=[1, 2])
         #sprint(avg_pool.get_shape())
         
         return avg_pool
 
 
-def patch_discriminator(input_tensor, patch_size, name='discriminator', reuse=False):
+def patch_discriminator(input_tensor, patch_size, 
+                        name='discriminator', reuse=False, use_bn=True):
     #input size 32*32
     with tf.variable_scope(name, reuse=reuse):
             
         batch_size = tf.shape(input_tensor)[0]
         patch = tf.random_crop(input_tensor, [batch_size, patch_size, patch_size, 3])
         
-        conv1 = slim.conv2d(patch, 32, [3, 3], activation_fn=None)
-        norm1 = tf.contrib.layers.layer_norm(conv1)
+        conv1 = utils.conv_sn(patch, 32, 3, name='conv1')
+        if use_bn:
+            norm1 = batch_norm(conv1, training=True)
+        else:
+            norm1 = tf.contrib.layers.layer_norm(conv1)
         relu1 = utils.leaky_relu(norm1)
         
-        conv2 = slim.conv2d(relu1, 32, [3, 3], stride=2, activation_fn=None)
-        norm2 = tf.contrib.layers.layer_norm(conv2)
+        conv2 = utils.conv_sn(relu1, 32, 3, stride=2, name='conv2')
+        if use_bn:
+            norm2 = batch_norm(conv2, training=True)
+        else:
+            norm2 = tf.contrib.layers.layer_norm(conv2)
         relu2 = utils.leaky_relu(norm2)
         
-        conv3 = slim.conv2d(relu2, 64, [3, 3], activation_fn=None)
-        norm3 = tf.contrib.layers.layer_norm(conv3)
+        conv3 = utils.conv_sn(relu2, 64, 3, name='conv3')
+        if use_bn:
+            norm3 = batch_norm(conv3, training=True)
+        else:
+            norm3 = tf.contrib.layers.layer_norm(conv3)
         relu3 = utils.leaky_relu(norm3)
         
-        conv4 = slim.conv2d(relu3, 64, [3, 3], stride=2, activation_fn=None)
-        norm4 = tf.contrib.layers.layer_norm(conv4)
+        conv4 = utils.conv_sn(relu3, 64, 3, stride=2, name='conv4')
+        if use_bn:
+            norm4 = batch_norm(conv4, training=True)
+        else:
+            norm4 = tf.contrib.layers.layer_norm(conv4)
         relu4 = utils.leaky_relu(norm4)
         
-        conv5 = slim.conv2d(relu4, 128, [3, 3], activation_fn=None)
-        norm5 = tf.contrib.layers.layer_norm(conv5)
+        conv5 = utils.conv_sn(relu4, 128, 3, name='conv5')
+        if use_bn:
+            norm5 = batch_norm(conv5, training=True)
+        else:
+            norm5 = tf.contrib.layers.layer_norm(conv5)
         relu5 = utils.leaky_relu(norm5)
         
-        conv6 = slim.conv2d(relu5, 128, [3, 3], stride=2, activation_fn=None)
-        norm6 = tf.contrib.layers.layer_norm(conv6)
+        conv6 = utils.conv_sn(relu5, 128, 3, stride=2, name='conv6')
+        if use_bn:
+            norm6 = batch_norm(conv6, training=True)
+        else:
+            norm6 = tf.contrib.layers.layer_norm(conv6)
         relu6 = utils.leaky_relu(norm6)
         
-        conv_out = slim.conv2d(relu6, 1, [1, 1], activation_fn=None)
+        conv_out = utils.conv_sn(relu6, 1, 1, name='conv7')
         avg_pool = tf.reduce_mean(conv_out, axis=[1, 2])
         #sprint(avg_pool.get_shape())
         

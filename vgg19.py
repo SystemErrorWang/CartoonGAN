@@ -19,7 +19,7 @@ class Vgg19:
             print(vgg19_npy_path)
 
         self.data_dict = np.load(vgg19_npy_path, encoding='latin1').item()
-        print("npy file loaded")
+        print('Finished loading vgg19.npy')
 
 
     def build(self, rgb, include_fc=False):
