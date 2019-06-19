@@ -15,8 +15,8 @@ def arg_parser():
     parser.add_argument("--patch_size", default = 96, type = int)
     parser.add_argument("--batch_size", default = 16, type = int)     
     parser.add_argument("--pre_iter", default = 10000, type = int)
-    parser.add_argument("--total_iter", default = 100000, type = int)
-    parser.add_argument("--pre_train_lr", default = 5e-4, type = float)
+    parser.add_argument("--total_iter", default = 50000, type = int)
+    parser.add_argument("--pre_train_lr", default = 1e-4, type = float)
     parser.add_argument("--adv_train_lr", default = 1e-4, type = float)
     parser.add_argument("--gpu_fraction", default = 0.5, type = float)
     parser.add_argument("--save_model_dir", default = 'saved_models')
@@ -37,14 +37,23 @@ def train(args):
                                 args.patch_size, args.patch_size, 3])
     is_training = tf.placeholder(tf.bool)
     
-    #generated_cartoon = network.generator_bn(input_photo, is_training=is_training)
-    generated_cartoon = network.generator(input_photo)
+    p2c_forward = network.generator(input_photo, name='photo2cartoon', reuse=False)
+    c2p_cycle = network.generator(p2c_forward, name='cartoon2photo', reuse=False)
+    
+    c2p_forward = network.generator(input_cartoon, name='photo2cartoon', reuse=True)
+    p2c_cycle = network.generator(c2p_forward, name='cartoon2photo', reuse=True)
+    
     
     blur_fake = utils.blur(generated_cartoon)
     blur_cartoon = utils.blur(input_cartoon)
     
     gray_fake = tf.image.rgb_to_grayscale(generated_cartoon)
     gray_cartoon = tf.image.rgb_to_grayscale(input_cartoon)
+    
+    d_loss_blur, g_loss_blur = utils.wgan_loss(network.disc_wgan, real=blur_cartoon, 
+                                         fake=blur_fake, name='disc_blur')
+    d_loss_gray, g_loss_gray = utils.wgan_loss(network.disc_wgan, real=gray_cartoon, 
+                                         fake=gray_fake, name='disc_gray')
     
     real_blur_logit = network.discriminator_bn(blur_cartoon, is_training, reuse=False, name='disc_blur')
     fake_blur_logit = network.discriminator_bn(blur_fake, is_training, reuse=True, name='disc_blur')
@@ -69,7 +78,7 @@ def train(args):
     d_loss_blur = -tf.reduce_mean(tf.log(real_blur_logit)
                             + tf.log(1. - fake_blur_logit))
                          
-    g_loss_total = 1e5*tv_loss + 1e0*(g_loss_blur + g_loss_gray) + 5e3*vgg44_loss
+    g_loss_total = 1e3*tv_loss + 1*(g_loss_blur + g_loss_gray) + 5e3*vgg44_loss
     d_loss_total = d_loss_blur + d_loss_gray
     
     all_vars = tf.trainable_variables()
@@ -180,4 +189,8 @@ def train(args):
 if __name__ == '__main__':
     args = arg_parser()
     train(args)  
+   
+    
+    
+
    
