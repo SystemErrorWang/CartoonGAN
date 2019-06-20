@@ -2,7 +2,15 @@
 
 update 2019.06.18:
 You can find old scripts in 'old_code' folder, and run the code with description below.
-I am testing some new models and the results will be updated later.
+I am testing some new models with different architecture and the results will be updated later.
+
+some new results:
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7499_train.png)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7999_train.png)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/8499_train.png)
+I also uploaded a pre-trained model and a script so you can try my new work.
+The training are quite different from the original paper, and I will update if I have time.
+
 
 
 This is a tensorflow implementation of Cartoon GAN published in CVPR2018 (http://openaccess.thecvf.com/content_cvpr_2018/papers/Chen_CartoonGAN_Generative_Adversarial_CVPR_2018_paper.pdf). The network is loosely based on the paper but has a few changes: input size is 96(256 in original paper), patch size for discriminator is 28(70 in original paper), less channels and stacked residual blocks for generator and discriminator network, different hyperparameters.
