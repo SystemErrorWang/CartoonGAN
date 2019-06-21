@@ -23,6 +23,7 @@ def cartoonize(image_path):
     output = interpreter.get_tensor(output_details[0]['index'])
     output = (np.squeeze(output)+1)*127.5
     output = np.clip(output, 0, 255)
+    
     cv2.imwrite('cartoon_image.jpg', output)
 
 
