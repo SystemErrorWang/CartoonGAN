@@ -3,6 +3,8 @@
 update 2019.06.18:
 You can find old scripts in 'old_code' folder, and run the code with description below.
 I am testing some new models with different architecture and the results will be updated later.
+I also uploaded a pre-trained model and a script so you can try my new work.
+The network is quite different from the original paper now, and i am considering writing a new paper.
 
 some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki1.jpg)
@@ -12,8 +14,7 @@ some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7499_train.png)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7999_train.png)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/8499_train.png)
-I also uploaded a pre-trained model and a script so you can try my new work.
-The training are quite different from the original paper, and I will update if I have time.
+
 
 
 
