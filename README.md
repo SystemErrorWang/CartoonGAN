@@ -9,7 +9,7 @@ The network is quite different from the original paper now, and i am considering
 some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki1.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki2.jpg)
-![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_scenery1.jpg)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_scenery2.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_shanghai.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_tower1.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7499_train.png)
