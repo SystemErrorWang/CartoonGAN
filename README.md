@@ -1,10 +1,8 @@
 # CartoonGAN
-
-update 2019.06.18:
-You can find old scripts in 'old_code' folder, and run the code with description below.
-I am testing some new models with different architecture and the results will be updated later.
+update 2019.07.18
+The following 5 images are outputs of my new model. It's much better than the previous one
 I also uploaded a pre-trained model and a script so you can try my new work.
-The network is quite different from the original paper now, and i am considering writing a new paper.
+The network is quite different from the original paper now, and i am considering writing a paper based on it.
 
 some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki1.jpg)
@@ -12,12 +10,15 @@ some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_scenery2.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_shanghai.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_tower1.jpg)
+
+update 2019.06.18:
+I designed a new network, trained it with dataset i collected and got self-satisfied result 
+You can find old scripts in 'old_code' folder, and run the code with description below.
+I am testing some new models with different architecture and the results will be updated later.
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7499_train.png)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7999_train.png)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/8499_train.png)
-
-
-
 
 This is a tensorflow implementation of Cartoon GAN published in CVPR2018 (http://openaccess.thecvf.com/content_cvpr_2018/papers/Chen_CartoonGAN_Generative_Adversarial_CVPR_2018_paper.pdf). The network is loosely based on the paper but has a few changes: input size is 96(256 in original paper), patch size for discriminator is 28(70 in original paper), less channels and stacked residual blocks for generator and discriminator network, different hyperparameters.
 
