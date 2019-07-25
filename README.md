@@ -4,7 +4,7 @@ The following 5 images are outputs of my new model. It's much better than the pr
 I also uploaded a pre-trained model and a scrip here, fell free to try it on your own data.
 The model architecure is now quite different from the original pape, i am considering to open source it later.
 
-demo video is available in bilibili:
+demo video is available on bilibili:
 https://www.bilibili.com/video/av56708333#reply1789899604
 
 some new results:
