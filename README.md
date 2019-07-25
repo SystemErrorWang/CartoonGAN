@@ -1,8 +1,11 @@
 # CartoonGAN
 update 2019.07.18
-The following 5 images are outputs of my new model. It's much better than the previous one
-I also uploaded a pre-trained model and a script so you can try my new work.
-The network is quite different from the original paper now, and i am considering writing a paper based on it.
+The following 5 images are outputs of my new model. It's much better than the previous one. 
+I also uploaded a pre-trained model and a scrip here, fell free to try it on your own data.
+The model architecure is now quite different from the original pape, i am considering to open source it later.
+
+demo video is available in bilibili:
+https://www.bilibili.com/video/av56708333#reply1789899604
 
 some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki1.jpg)
