@@ -1,8 +1,8 @@
 # CartoonGAN
 update 2019.07.18
-The following 5 images are outputs of my new model. It's much better than the previous one. 
-I also uploaded a pre-trained model and a scrip here, fell free to try it on your own data.
-The model architecure is now quite different from the original pape, i am considering to open source it later.
+Upload some results of my new model. It's much better than before. 
+A pre-trained model is also available now, please feel free to try your own data.
+The training settings are quite different from the original pape now. Maybe i will write a paper about it
 
 demo video is available on bilibili:
 https://www.bilibili.com/video/av56708333#reply1789899604
