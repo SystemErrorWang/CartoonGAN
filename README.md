@@ -18,9 +18,9 @@ some new results:
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_tower1.jpg)
 
 update 2019.06.18:
-I designed a new network, trained it with dataset i collected and got self-satisfied result 
-You can find old scripts in 'old_code' folder, and run the code with description below.
-I am testing some new models with different architecture and the results will be updated later.
+I designed a new model, trained it with new dataset and got much better cartoonization quality
+Still, you can find old scripts in 'old_code' folder, and run training script with description below.
+
 
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7499_train.png)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/7999_train.png)
