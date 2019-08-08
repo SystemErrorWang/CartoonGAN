@@ -1,4 +1,7 @@
 # CartoonGAN
+update 2019.08.08
+upload a new script and npy weight, now you can cartoonize image with random size.
+
 update 2019.07.18
 Upload some results of my new model. It's much better than before. 
 A pre-trained model is also available now, please feel free to try your own data.
