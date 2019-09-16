@@ -7,10 +7,14 @@ Upload some results of my new model. It's much better than before.
 A pre-trained model is also available now, please feel free to try your own data.
 The training settings are quite different from the original pape now. Maybe i will write a paper about it
 
+update 2019.09.16
+Added some result of my new model, writing papers now. 
+
 demo video is available on bilibili:
 https://www.bilibili.com/video/av56708333#reply1789899604
 
 some new results:
+
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG76.jpeg?raw=true)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG77.jpeg?raw=true)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG78.jpeg?raw=true)
