@@ -11,6 +11,10 @@ demo video is available on bilibili:
 https://www.bilibili.com/video/av56708333#reply1789899604
 
 some new results:
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG76.jpeg?raw=true)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG77.jpeg?raw=true)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG78.jpeg?raw=true)
+![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/WechatIMG79.jpeg?raw=true)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki1.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_gakki2.jpg)
 ![alt text](https://github.com/SystemErrorWang/CartoonGAN/blob/master/results/cartoon_scenery2.jpg)
