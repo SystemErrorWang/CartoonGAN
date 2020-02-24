@@ -1,6 +1,6 @@
 # CartoonGAN
-update 2020.02.24:
-Our research about image cartoonization is accepted to CVPR2020. Relevent repository, code and pre-trained model will be made publicly available later.
+# update 2020.02.24:
+# Our paper "Learning to Cartoonize Using White-Box Cartoon Representations" is accepted to CVPR2020. Relevent repository, code and pre-trained model will be made publicly available later.
 
 update 2019.08.08
 upload a new script and npy weight, now you can cartoonize image with random size.
