@@ -1,8 +1,6 @@
 # CartoonGAN
-# update 2020.02.24:
-# Our paper "Learning to Cartoonize Using White-Box Cartoon Representations" is accepted to CVPR2020. Relevent repository, code and pre-trained model will be made publicly available later.
-
-The repo for our paper is https://github.com/SystemErrorWang/White-box-Cartoonization, now inference code and pre-trained data is available, other information will be updated later
+# update 2020.06.01:
+# Our paper "Learning to Cartoonize Using White-Box Cartoon Representations" is accepted by CVPR2020. Source code and pre-trained model is open-sourced in https://github.com/SystemErrorWang/White-box-Cartoonization.
 
 update 2019.08.08
 upload a new script and npy weight, now you can cartoonize image with random size.
